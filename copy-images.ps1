@@ -15,7 +15,8 @@ param (
 	[switch]$printConfig = $false,
 	[switch]$today = $false,
 	[string]$from = "",
-	[string]$to = ""
+	[string]$to = "",
+	[switch]$ymdPath = $true
  )
 
 trap
@@ -62,8 +63,9 @@ echo "Dry run:   $dryRun"
 echo "Today:     $today"
 echo "From:      $fromDate"
 echo "To:        $toDate"
+echo "YMD path:  $ymdPath"
 
-if ($printConfig)s
+if ($printConfig)
 {
 	exit
 }
@@ -88,7 +90,14 @@ foreach ($item in $files)
 		$name = $item.Name
 		
 		# Create destination path of specified format (<out_path>\<date>)
-		$destPath = join-path -Path $outdir -ChildPath $shortDate
+		if ($ymdPath)
+		{
+			$destPath = join-path -Path (join-path -Path (join-path -Path $outdir -ChildPath $date.year) -ChildPath $date.month) -ChildPath $date.day
+		}
+		else 
+		{
+			$destPath = join-path -Path $outdir -ChildPath $shortDate
+		}
 
 		if (!(Test-Path -Path $destPath))
 		{
