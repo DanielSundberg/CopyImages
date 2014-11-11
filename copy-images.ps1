@@ -63,7 +63,7 @@ echo "Today:     $today"
 echo "From:      $fromDate"
 echo "To:        $toDate"
 
-if ($printConfig)
+if ($printConfig)s
 {
 	exit
 }
@@ -80,12 +80,14 @@ foreach ($item in $files)
 	$i += 1
 	$date = $item | get-date
 	
+	# Check that file date is in our date interval
 	if (($date -gt $fromDate) -and ($date -lt $toDate))
 	{
 		$shortDate = $date.ToShortDateString()
 		$fullName = $item.FullName
 		$name = $item.Name
 		
+		# Create destination path of specified format (<out_path>\<date>)
 		$destPath = join-path -Path $outdir -ChildPath $shortDate
 
 		if (!(Test-Path -Path $destPath))
