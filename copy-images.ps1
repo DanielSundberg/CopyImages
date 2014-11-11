@@ -85,14 +85,14 @@ foreach ($item in $files)
 	# Check that file date is in our date interval
 	if (($date -gt $fromDate) -and ($date -lt $toDate))
 	{
-		$shortDate = $date.ToShortDateString()
+		$shortDate = $date.ToString("yyyy-MM-dd")
 		$fullName = $item.FullName
 		$name = $item.Name
 		
 		# Create destination path of specified format (<out_path>\<date>)
 		if ($ymdPath)
 		{
-			$destPath = join-path -Path (join-path -Path (join-path -Path $outdir -ChildPath $date.year) -ChildPath $date.month) -ChildPath $date.day
+			$destPath = join-path -Path (join-path -Path (join-path -Path $outdir -ChildPath $date.year) -ChildPath $date.month) -ChildPath $shortDate
 		}
 		else 
 		{
