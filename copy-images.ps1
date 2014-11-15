@@ -11,7 +11,6 @@ param (
     [switch]$dryRun = $false,
     [string]$indir = "e:\",
     [string]$outdir = "c:\bilder2",
-	[switch]$raw = $false, 
 	[switch]$printConfig = $false,
 	[switch]$today = $false,
 	[string]$from = "",
@@ -25,16 +24,10 @@ trap
 	exit 1
 }
  
-# Raw files or jpg
-if ($raw)
-{
-	$type = "*.nef"
-	$outdir = join-path -Path $outdir -ChildPath "Raw"
-}
-else
-{
-	$type = "*.jpg"
-}
+$rawFiles = "*.NEF"
+$jpgFiles = "*.JPG"
+
+$rawOutdir = join-path -Path $outdir -ChildPath "Raw"
  
 # Parse dates
 $fromDate = [DateTime]::MinValue
@@ -72,7 +65,7 @@ if ($printConfig)
 
 echo "Getting file list form $indir"
 
-$files = gci -Recurse -Path $indir $type
+$files = gci -Recurse -Path $indir -include $jpgFiles,$rawFiles
 
 $i = 1
 foreach ($item in $files)
@@ -89,14 +82,25 @@ foreach ($item in $files)
 		$fullName = $item.FullName
 		$name = $item.Name
 		
-		# Create destination path of specified format (<out_path>\<date>)
+		Write-host "Extension: " $item.Extension.ToUpper()
+		if ($item.Extension.ToUpper() -eq ".NEF")
+		{
+			$destPath = join-path -Path $outdir -ChildPath "Raw"
+		}
+		else
+		{
+			$destPath = $outdir
+		}
+		
+		# Create destination path of specified format <out_path>\<date>
+		# or <out_path>\year\mm\<date>
 		if ($ymdPath)
 		{
-			$destPath = join-path -Path (join-path -Path (join-path -Path $outdir -ChildPath $date.year) -ChildPath $date.month) -ChildPath $shortDate
+			$destPath = join-path -Path (join-path -Path (join-path -Path $destPath -ChildPath $date.year) -ChildPath $date.month) -ChildPath $shortDate
 		}
 		else 
 		{
-			$destPath = join-path -Path $outdir -ChildPath $shortDate
+			$destPath = join-path -Path $destPath -ChildPath $shortDate
 		}
 
 		if (!(Test-Path -Path $destPath))
