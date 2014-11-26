@@ -82,7 +82,6 @@ foreach ($item in $files)
 		$fullName = $item.FullName
 		$name = $item.Name
 		
-		Write-host "Extension: " $item.Extension.ToUpper()
 		if ($item.Extension.ToUpper() -eq ".NEF")
 		{
 			$destPath = join-path -Path $outdir -ChildPath "Raw"
