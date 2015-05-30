@@ -3,6 +3,9 @@
 Powershell script to copy files from memory card to folder on disk. By default
 the script will copy **.NEF** and **.JPG** files.
 
+Default is to copy all new files. Nothing will be overwritten, **inDir** and
+ **outDir** must be specified if other than default.
+
 ## Usage examples
 <code>
 .\copy-images.ps1 -indir "e:" -outdir "c:\images" -today
